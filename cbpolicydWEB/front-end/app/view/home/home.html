@@ -1,0 +1,51 @@
+<md-toolbar color="primary">
+    <span>{{title}}</span>
+
+    <span style="flex: 1 1 auto"></span>  
+    
+    <button md-icon-button [md-menu-trigger-for]="menu">
+        <md-icon>more_vert</md-icon>
+    </button>
+    
+    <md-menu x-position="before" #menu="mdMenu">
+        <button md-menu-item> Help </button>
+        <button md-menu-item > Sign Out </button>
+    </md-menu>
+</md-toolbar>
+
+<md-tab-group>
+  
+  <md-tab>
+    <template md-tab-label>
+        <md-icon>home</md-icon>
+    </template>
+
+    <template md-tab-content>
+        <policies-main></policies-main>
+    </template>
+  </md-tab>
+
+  <md-tab>
+    <template md-tab-label>
+        Access control
+    </template>
+    <!--content-->
+  </md-tab>
+
+  <md-tab>
+    <template md-tab-label>
+        Quotas
+    </template>
+    <!--content-->
+  </md-tab>
+
+  <md-tab>
+    <template md-tab-label>
+        Accounting        
+    </template>
+    <!--content-->
+  </md-tab>
+</md-tab-group>
+
+
+<router-outlet></router-outlet>

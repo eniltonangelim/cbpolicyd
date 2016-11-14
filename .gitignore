@@ -1,0 +1,4 @@
+front-end/app/js/
+*.map
+*.log
+node_modules/
