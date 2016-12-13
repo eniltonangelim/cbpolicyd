@@ -8,9 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-require('rxjs/add/observable/of');
-var core_1 = require('@angular/core');
-var Observable_1 = require('rxjs/Observable');
+require("rxjs/add/observable/of");
+var core_1 = require("@angular/core");
+var Observable_1 = require("rxjs/Observable");
 var PreloadSelectedModules = (function () {
     function PreloadSelectedModules() {
         this.preloadedModules = [];
@@ -27,11 +27,11 @@ var PreloadSelectedModules = (function () {
             return Observable_1.Observable.of(null);
         }
     };
-    PreloadSelectedModules = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
-    ], PreloadSelectedModules);
     return PreloadSelectedModules;
 }());
+PreloadSelectedModules = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [])
+], PreloadSelectedModules);
 exports.PreloadSelectedModules = PreloadSelectedModules;
 //# sourceMappingURL=selective-preload-strategy.js.map

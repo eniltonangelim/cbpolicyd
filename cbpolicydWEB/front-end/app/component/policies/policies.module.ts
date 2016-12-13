@@ -1,21 +1,22 @@
-import { NgModule }       from '@angular/core';
+import { 
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA
+}       from '@angular/core';
 import { CommonModule }   from '@angular/common';
-import { MaterialModule }     from '@angular/material';
 
 import { PoliciesMainComponent }   from './policies.main.component';
-
 import { PoliciesRoutingModule } from './policies-routing.module';
-
 import { PoliciesService }   from './policies.service';
 
 @NgModule({
   imports: [
-    CommonModule, MaterialModule.forRoot(),
+    CommonModule,
     PoliciesRoutingModule
   ],
   declarations: [
     PoliciesMainComponent
   ],
-  providers: [ PoliciesService ]
+  providers: [ PoliciesService ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class PoliciesModule {}

@@ -1,13 +1,16 @@
 import { NgModule }     from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { PoliciesMainComponent }       from './policies.main.component';
 
+
+const policiesRoutes: Routes = [
+    {path: 'main', component: PoliciesMainComponent}
+];
+
 @NgModule({
   imports: [
-    RouterModule.forChild([
-      { path: 'main', component: PoliciesMainComponent },
-    ])
+    RouterModule.forChild(policiesRoutes)
   ],
   exports: [
     RouterModule

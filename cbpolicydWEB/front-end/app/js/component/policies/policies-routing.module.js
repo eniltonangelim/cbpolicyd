@@ -8,26 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
-var policies_main_component_1 = require('./policies.main.component');
+var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
+var policies_main_component_1 = require("./policies.main.component");
+var policiesRoutes = [
+    { path: 'main', component: policies_main_component_1.PoliciesMainComponent }
+];
 var PoliciesRoutingModule = (function () {
     function PoliciesRoutingModule() {
     }
-    PoliciesRoutingModule = __decorate([
-        core_1.NgModule({
-            imports: [
-                router_1.RouterModule.forChild([
-                    { path: 'main', component: policies_main_component_1.PoliciesMainComponent },
-                ])
-            ],
-            exports: [
-                router_1.RouterModule
-            ]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], PoliciesRoutingModule);
     return PoliciesRoutingModule;
 }());
+PoliciesRoutingModule = __decorate([
+    core_1.NgModule({
+        imports: [
+            router_1.RouterModule.forChild(policiesRoutes)
+        ],
+        exports: [
+            router_1.RouterModule
+        ]
+    }),
+    __metadata("design:paramtypes", [])
+], PoliciesRoutingModule);
 exports.PoliciesRoutingModule = PoliciesRoutingModule;
 //# sourceMappingURL=policies-routing.module.js.map

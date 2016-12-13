@@ -8,31 +8,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
-//import { CanDeactivateGuard }              from './service/login/guard/can-deactivate-guard.service';
-//import { AuthGuard }                       from './service/login/auth-guard.service'
-var selective_preload_strategy_1 = require('./selective-preload-strategy');
-//import { SigninComponent }                 from './component/login/signin.component';
+var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
+var appRoutes = [];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
     }
-    AppRoutingModule = __decorate([
-        core_1.NgModule({
-            imports: [
-                router_1.RouterModule.forRoot([], { preloadingStrategy: selective_preload_strategy_1.PreloadSelectedModules })
-            ],
-            exports: [
-                router_1.RouterModule
-            ],
-            providers: [
-                //CanDeactivateGuard,
-                selective_preload_strategy_1.PreloadSelectedModules
-            ]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppRoutingModule);
     return AppRoutingModule;
 }());
+AppRoutingModule = __decorate([
+    core_1.NgModule({
+        imports: [
+            router_1.RouterModule.forRoot(appRoutes)
+        ],
+        exports: [
+            router_1.RouterModule
+        ]
+    }),
+    __metadata("design:paramtypes", [])
+], AppRoutingModule);
 exports.AppRoutingModule = AppRoutingModule;
 //# sourceMappingURL=app-routing.module.js.map

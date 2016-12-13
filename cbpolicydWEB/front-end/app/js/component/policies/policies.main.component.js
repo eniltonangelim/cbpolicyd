@@ -8,29 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
-var selective_preload_strategy_1 = require('../../selective-preload-strategy');
-var policies_service_1 = require('./policies.service');
+var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
+var policies_service_1 = require("./policies.service");
 var PoliciesMainComponent = (function () {
-    function PoliciesMainComponent(policiesService, route, router, preloadStrategy) {
+    function PoliciesMainComponent(policiesService, route, router) {
         this.policiesService = policiesService;
         this.route = route;
         this.router = router;
-        this.preloadStrategy = preloadStrategy;
     }
     PoliciesMainComponent.prototype.ngOnInit = function () {
     };
-    PoliciesMainComponent = __decorate([
-        core_1.Component({
-            selector: 'policies-main',
-            templateUrl: 'app/view/policies/policies.main.component.html',
-            //styleUrls: ['app/view/policies/policies.main.component.css'],
-            providers: [policies_service_1.PoliciesService]
-        }), 
-        __metadata('design:paramtypes', [policies_service_1.PoliciesService, router_1.ActivatedRoute, router_1.Router, selective_preload_strategy_1.PreloadSelectedModules])
-    ], PoliciesMainComponent);
     return PoliciesMainComponent;
 }());
+PoliciesMainComponent = __decorate([
+    core_1.Component({
+        selector: 'policies-main',
+        templateUrl: 'app/view/policies/policies.main.component.html'
+    }),
+    __metadata("design:paramtypes", [policies_service_1.PoliciesService,
+        router_1.ActivatedRoute,
+        router_1.Router])
+], PoliciesMainComponent);
 exports.PoliciesMainComponent = PoliciesMainComponent;
 //# sourceMappingURL=policies.main.component.js.map

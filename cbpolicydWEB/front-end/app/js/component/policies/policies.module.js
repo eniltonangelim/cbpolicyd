@@ -8,29 +8,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var common_1 = require('@angular/common');
-var material_1 = require('@angular/material');
-var policies_main_component_1 = require('./policies.main.component');
-var policies_routing_module_1 = require('./policies-routing.module');
-var policies_service_1 = require('./policies.service');
+var core_1 = require("@angular/core");
+var common_1 = require("@angular/common");
+var policies_main_component_1 = require("./policies.main.component");
+var policies_routing_module_1 = require("./policies-routing.module");
+var policies_service_1 = require("./policies.service");
 var PoliciesModule = (function () {
     function PoliciesModule() {
     }
-    PoliciesModule = __decorate([
-        core_1.NgModule({
-            imports: [
-                common_1.CommonModule, material_1.MaterialModule.forRoot(),
-                policies_routing_module_1.PoliciesRoutingModule
-            ],
-            declarations: [
-                policies_main_component_1.PoliciesMainComponent
-            ],
-            providers: [policies_service_1.PoliciesService]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], PoliciesModule);
     return PoliciesModule;
 }());
+PoliciesModule = __decorate([
+    core_1.NgModule({
+        imports: [
+            common_1.CommonModule,
+            policies_routing_module_1.PoliciesRoutingModule
+        ],
+        declarations: [
+            policies_main_component_1.PoliciesMainComponent
+        ],
+        providers: [policies_service_1.PoliciesService],
+        schemas: [core_1.CUSTOM_ELEMENTS_SCHEMA]
+    }),
+    __metadata("design:paramtypes", [])
+], PoliciesModule);
 exports.PoliciesModule = PoliciesModule;
 //# sourceMappingURL=policies.module.js.map

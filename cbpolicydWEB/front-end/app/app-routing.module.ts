@@ -1,25 +1,20 @@
-import { ModuleWithProviders, NgModule }   from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+import {
+    RouterModule,
+    Routes
+} from '@angular/router';
 
-//import { CanDeactivateGuard }              from './service/login/guard/can-deactivate-guard.service';
-//import { AuthGuard }                       from './service/login/auth-guard.service'
-import { PreloadSelectedModules }          from './selective-preload-strategy';
+const appRoutes: Routes =[
 
-//import { SigninComponent }                 from './component/login/signin.component';
+];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot([
-      //{ path: 'signin',  component: SigninComponent }
-    ],
-    { preloadingStrategy: PreloadSelectedModules })
+  imports:[
+    RouterModule.forRoot(appRoutes)
   ],
   exports: [
     RouterModule
-  ],
-  providers: [
-    //CanDeactivateGuard,
-    PreloadSelectedModules
   ]
 })
+
 export class AppRoutingModule {}
