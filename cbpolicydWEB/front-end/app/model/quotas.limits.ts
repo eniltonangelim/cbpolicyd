@@ -1,9 +1,7 @@
-import { Quotas } from './quotas'
-
 export class QuotasLimits {
     constructor(
         public id?: Number,
-        public quotasID?: Quotas,
+        public quotasID?: Number,
         public types?: String,
         public counterLimit?: Number,
         public comment?: String,

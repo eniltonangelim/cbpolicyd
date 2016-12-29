@@ -9,26 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
-var policies_main_component_1 = require("./policies.main.component");
-var policiesRoutes = [
-    { path: 'main', component: policies_main_component_1.PoliciesMainComponent }
-];
-var PoliciesRoutingModule = (function () {
-    function PoliciesRoutingModule() {
+var policies_service_1 = require("../policies.service");
+var PoliciesDashboardComponent = (function () {
+    function PoliciesDashboardComponent(policiesService) {
+        this.policiesService = policiesService;
     }
-    return PoliciesRoutingModule;
+    PoliciesDashboardComponent.prototype.ngOnInit = function () { };
+    return PoliciesDashboardComponent;
 }());
-PoliciesRoutingModule = __decorate([
-    core_1.NgModule({
-        imports: [
-            router_1.RouterModule.forChild(policiesRoutes)
-        ],
-        exports: [
-            router_1.RouterModule
-        ]
+PoliciesDashboardComponent = __decorate([
+    core_1.Component({
+        selector: 'policies-dashboard',
+        templateUrl: 'app/view/policies/policies.dashboard.component.html'
     }),
-    __metadata("design:paramtypes", [])
-], PoliciesRoutingModule);
-exports.PoliciesRoutingModule = PoliciesRoutingModule;
-//# sourceMappingURL=policies-routing.module.js.map
+    __metadata("design:paramtypes", [policies_service_1.PoliciesService])
+], PoliciesDashboardComponent);
+exports.PoliciesDashboardComponent = PoliciesDashboardComponent;
+//# sourceMappingURL=policies.dashboard.component.js.map

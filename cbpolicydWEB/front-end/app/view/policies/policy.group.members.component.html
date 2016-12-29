@@ -1,0 +1,85 @@
+<div class="container-fluid">
+    <md-toolbar color="primary">
+        <span>{{title}} {{policies.policyGroup.name}}</span>
+
+        <span style="flex: 1 1 auto"></span>  
+
+        <button md-icon-button (click)="close()" >
+                <md-icon class="md-18">close</md-icon>
+        </button>        
+    </md-toolbar>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed">
+
+            <thead>
+                <tr>
+                    <th> ID </th>
+                    <th> PolicyGroupID </th>
+                    <th> Member </th>
+                    <th> Comment </th>
+                    <th> Disabled </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr >
+
+                    <td > 
+                        <md-input-container> 
+                            <input type="number" disabled md-input>
+                        </md-input-container>
+                    </td>
+        
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newPolicyGroupMembers.policyGroupID" (input)="newPolicyGroupMembers.policyGroupID = $event.target.value" readonly>
+                        </md-input-container>
+                    </td>
+        
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newPolicyGroupMembers.member" (input)="newPolicyGroupMembers.member = $event.target.value" >
+                        </md-input-container>
+                    </td>
+
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newPolicyGroupMembers.comment" (input)="newPolicyGroupMembers.comment = $event.target.value">
+                        </md-input-container>
+                    </td>
+
+                    <td >
+                        <md-input-container>
+                            <input type="number" min=0 max="1" md-input [value]="newPolicyGroupMembers.disabled" (input)="newPolicyGroupMembers.disabled = $event.target.value">
+                        </md-input-container>
+                    </td>
+                    <td >
+                        <button md-icon-button (click)="addPolicyGroupMembers()" >
+                            <md-icon class="md-18">save</md-icon>
+                        </button>
+                    </td>
+                    <td >
+                        <button md-icon-button (click)="montaPolicyGroupMembers()">
+                            <md-icon class="md-18">delete_forever</md-icon>
+                        </button>
+                    </td>
+                </tr> 
+
+                <tr *ngFor="let policyGroupMember of policyGroupMembers" >
+                    <td >{{policyGroupMember.id}}              </td>
+                    <td >{{policyGroupMember.policyGroupID}}        </td>
+                    <td >{{policyGroupMember.member}}          </td>
+                    <td >{{policyGroupMember.comment}}         </td>
+                    <td >{{policyGroupMember.disabled}}        </td>
+
+                    <td >
+                        <button md-icon-button (click)="removePolicyGroupMembers(policyGroupMember)">
+                            <md-icon class="md-18">delete_forever</md-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -175,3 +175,84 @@ Tipo de restrição
 "Os comandos acima estão impondo uma quota que está restringindo todos os usuários em% test_group e user@mydomain.com para não enviar mais de duas mensagens em um intervalo de tempo de dois minutos. Observe que a cota está apontando para uma diretiva específica. Temos apenas uma política, portanto, ela aponta para a diretiva ID 1. A tabela quota_limits tem uma entrada que está apontando para a cota da tabela de cota. Em vez de "Sender", podemos especificar "Destinatário", que irá limitar os e-mails recebidos pelo usuário / grupo."
 
 Fonte: wiki.zimbra.com
+
+
+### Exemplo
+
++ Rate limit any sender from sending more then 20 emails every 60 seconds.  Messages beyond this limit are deferred.
+
++ Rate limit any @domain from receiving more then 50 emails in a 60 second period.  Messages beyond this rate are rejected.
+
+sqlite3 /opt/zimbra/data/cbpolicyd/db/cbpolicyd.sqlitedb  <access_control.sql
+
+```sql
+BEGIN TRANSACTION;
+INSERT INTO "policies" VALUES(6, 'Zimbra', 0, 'Zimbra QA Test Policy', 0);
+DELETE FROM sqlite_sequence;
+INSERT INTO "sqlite_sequence" VALUES('policies', 6);
+INSERT INTO "sqlite_sequence" VALUES('policy_members', 6);
+INSERT INTO "sqlite_sequence" VALUES('policy_groups', 2);
+INSERT INTO "sqlite_sequence" VALUES('policy_group_members', 3);
+INSERT INTO "sqlite_sequence" VALUES('quotas', 4);
+INSERT INTO "sqlite_sequence" VALUES('quotas_limits', 5);
+INSERT INTO "sqlite_sequence" VALUES('checkhelo_blacklist', 4);
+INSERT INTO "policy_members" VALUES(6, 6, 'any', 'any', , 0);
+INSERT INTO "quotas" VALUES(3, 6, 'Sender:user@domain','Sender:user@domain', 60, 'DEFER', 'Deferring: Too many messages from sender in last 60', , 0);
+INSERT INTO "quotas" VALUES(4, 6, 'Recipient:@domain', 'Recipient:@domain', 60, 'REJECT', , , 0);
+INSERT INTO "quotas_limits" VALUES(4, 3, 'MessageCount', 20, , 0);
+INSERT INTO "quotas_limits" VALUES(5, 4, 'MessageCount', 50, , 0);
+COMMIT;
+```
+
+## Access Control CBPolicyd - Ordem de configuração
+
+Na teoria a configuração para restringir o envio local de email para uma lista de contas estar descrita logo abaixo, contudo não funcionou no nosso servidor de email.
+
+## Módulo access_control
+
+```text
+zmlocalconfig -e cbpolicyd_module_accesscontrol=1
+zmlocalconfig -e postfix_enable_smtpd_policyd=yes
+zmlocalconfig -e cbpolicyd_log_level=4
+zmlocalconfig -e cbpolicyd_module_accesscontrol=1 cbpolicyd_module_quotas=1
+```
+
++ Zimbra 8.0.x
+
+```text
+su – zimbra
+zmprov ms `zmhostname` +zimbraServiceInstalled cbpolicyd +zimbraServiceEnabled cbpolicyd
+zmlocalconfig -e postfix_enable_smtpd_policyd=yes
+zmprov mcf +zimbraMtaRestriction “check_policy_service inet:127.0.0.1:10031”
+```
+
++ Zimbra 8.5.x
+
+```text
+su - zimbra
+zmprov ms `zmhostname` zimbraCBPolicydAccessControlEnabled TRUE
+```
+
+```text
+zmmtactl stop
+zmmtactl start
+zmcbpolicydctl restart
+```
+
+### CBPolicyd - Configuração
+
+sqlite3 /opt/zimbra/data/cbpolicyd/db/cbpolicyd.sqlitedb  <access_control.sql
+
++ _access_control.sql_
+
+```sql
+BEGIN TRANSACTION;
+INSERT INTO "policies" (ID,Name,Priority,Description) VALUES (6, 'homologa', 0, 'Teste: Somente envio local');
+INSERT INTO "policy_members" (PolicyID,Source,Destination) VALUES(6, '%local_user', '!%local_domain');
+INSERT INTO "policy_groups"  (ID,Name,Disabled,Comment)  VALUES (3, 'local_user', 0, 'Lista de contas');
+INSERT INTO "policy_groups"  (ID,Name,Disabled,Comment)  VALUES (4, 'local_domain', 0, 'Teste: Lista de domínio');
+INSERT INTO "policy_group_members" (ID, PolicyGroupID, Member, Disabled, Comment) VALUES (4, 3, 'f13@labz.localhost.local',0,'Somente envio local');
+INSERT INTO "policy_group_members" (ID, PolicyGroupID, Member, Disabled, Comment) VALUES (5, 4, '@labz.localhost.local', 0, 'Somente envio local');
+INSERT INTO "access_control" (ID, PolicyID, Name, Verdict, Data, Comment, Disabled)  VALUES (1,6,'homologa_acl', 'REJECT', 'Access Denied', 'Somente envio local', 0);
+COMMIT;
+```

@@ -1,0 +1,95 @@
+<div class="container-fluid">
+    <md-toolbar color="primary">
+        <span></span>
+
+        <span style="flex: 1 1 auto"></span>  
+
+        <button md-icon-button (click)="close()" >
+                <md-icon class="md-18">close</md-icon>
+        </button>        
+    </md-toolbar>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed">
+
+            <thead>
+                <tr>
+                    <th> ID </th>
+                    <th> QuotasID </th>
+                    <th> Type </th>
+                    <th> CounterLimit </th>
+                    <th> Comment </th>
+                    <th> Disabled </th>
+                </tr>
+            </thead>
+<!--
+            <tbody>
+
+                <tr >
+
+                    <td > 
+                        <md-input-container> 
+                            <input type="number" disabled md-input>
+                        </md-input-container>
+                    </td>
+        
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newQuotasLimits.quotasID" (input)="newQuotasLimits.quotasID = $event.target.value" readonly>
+                        </md-input-container>
+                    </td>
+        
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newQuotasLimits.type" (input)="newQuotasLimits.type = $event.target.value" >
+                        </md-input-container>
+                    </td>
+
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newQuotasLimits.counterLimit" (input)="newQuotasLimits.counterLimit = $event.target.value">
+                        </md-input-container>
+                    </td>
+
+                    <td >
+                        <md-input-container>
+                            <input md-input [value]="newQuotasLimits.comment" (input)="newQuotasLimits.comment = $event.target.value">
+                        </md-input-container>
+                    </td>
+
+                    <td >
+                        <md-input-container>
+                            <input type="number" min=0 max="1" md-input [value]="newQuotasLimits.disabled" (input)="newQuotasLimits.disabled = $event.target.value">
+                        </md-input-container>
+                    </td>
+                    <td >
+                        <button md-icon-button (click)="addQuotasLimits()" >
+                            <md-icon class="md-18">save</md-icon>
+                        </button>
+                    </td>
+                    <td >
+                        <button md-icon-button (click)="montaQuotasLimits()">
+                            <md-icon class="md-18">delete_forever</md-icon>
+                        </button>
+                    </td>
+                </tr> 
+
+                <tr *ngFor="let quotasLimit of quotasLimits" >
+                    <td >{{quotasLimit.id}}              </td>
+                    <td >{{quotasLimit.quotasID}}        </td>
+                    <td >{{quotasLimit.type}}            </td>
+                    <td >{{quotasLimit.counterLimit}}    </td>
+                    <td >{{quotasLimit.comment}}         </td>
+                    <td >{{quotasLimit.disabled}}        </td>
+
+                    <td >
+                        <button md-icon-button (click)="removeQuotasLimits(quotasLimit)">
+                            <md-icon class="md-18">delete_forever</md-icon>
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+-->
+        </table>
+    </div>
+</div>

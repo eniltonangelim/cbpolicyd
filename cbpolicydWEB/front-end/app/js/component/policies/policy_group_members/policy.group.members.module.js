@@ -10,27 +10,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
-var policies_main_component_1 = require("./policies.main.component");
-var policies_routing_module_1 = require("./policies-routing.module");
-var policies_service_1 = require("./policies.service");
-var PoliciesModule = (function () {
-    function PoliciesModule() {
+var material_1 = require("@angular/material");
+var policy_group_members_service_1 = require("./policy.group.members.service");
+var policy_group_members_component_1 = require("./policy.group.members.component");
+var PolicyGroupMembersModule = (function () {
+    function PolicyGroupMembersModule() {
     }
-    return PoliciesModule;
+    return PolicyGroupMembersModule;
 }());
-PoliciesModule = __decorate([
+PolicyGroupMembersModule = __decorate([
     core_1.NgModule({
         imports: [
-            common_1.CommonModule,
-            policies_routing_module_1.PoliciesRoutingModule
+            material_1.MaterialModule.forRoot(), common_1.CommonModule
         ],
-        declarations: [
-            policies_main_component_1.PoliciesMainComponent
-        ],
-        providers: [policies_service_1.PoliciesService],
+        declarations: [policy_group_members_component_1.PolicyGroupMembersComponent],
+        providers: [policy_group_members_service_1.PolicyGroupMembersService],
         schemas: [core_1.CUSTOM_ELEMENTS_SCHEMA]
     }),
     __metadata("design:paramtypes", [])
-], PoliciesModule);
-exports.PoliciesModule = PoliciesModule;
-//# sourceMappingURL=policies.module.js.map
+], PolicyGroupMembersModule);
+exports.PolicyGroupMembersModule = PolicyGroupMembersModule;
+//# sourceMappingURL=policy.group.members.module.js.map

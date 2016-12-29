@@ -9,13 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
 var policies_service_1 = require("./policies.service");
 var PoliciesMainComponent = (function () {
-    function PoliciesMainComponent(policiesService, route, router) {
+    function PoliciesMainComponent(policiesService) {
         this.policiesService = policiesService;
-        this.route = route;
-        this.router = router;
     }
     PoliciesMainComponent.prototype.ngOnInit = function () {
     };
@@ -26,9 +23,7 @@ PoliciesMainComponent = __decorate([
         selector: 'policies-main',
         templateUrl: 'app/view/policies/policies.main.component.html'
     }),
-    __metadata("design:paramtypes", [policies_service_1.PoliciesService,
-        router_1.ActivatedRoute,
-        router_1.Router])
+    __metadata("design:paramtypes", [policies_service_1.PoliciesService])
 ], PoliciesMainComponent);
 exports.PoliciesMainComponent = PoliciesMainComponent;
 //# sourceMappingURL=policies.main.component.js.map

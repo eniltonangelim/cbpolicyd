@@ -1,0 +1,90 @@
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th> ID </th>
+            <th> Name </th>
+            <th> Comment </th>
+            <th> Disabled </th>
+        </tr>
+    </thead>
+
+    <tr>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input> 
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input md-input [(ngModel)]="newPolicyGroups.name" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+    
+        <td >
+            <md-input-container>
+                <input  md-input [(ngModel)]="newPolicyGroups.comment" [ngModelOptions]="{standalone: true}" >
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input type="number" min=0 max="1" md-input [(ngModel)]="newPolicyGroups.disabled" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <button md-icon-button (click)="addPolicyGroups()" >
+                <md-icon class="md-18">save</md-icon>
+            </button>
+        </td>
+
+        <td >
+            <button md-icon-button (click)="clearPolicyGroups()">
+                <md-icon class="md-18">delete_forever</md-icon>
+            </button>
+        </td>
+
+    </tr>
+
+<br/>
+
+    <tr *ngFor="let policyGroup of policyGroups" >
+
+      <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{policyGroup.id}}"> 
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input (keyup)="changes(policy)" readonly md-input value="{{policyGroup.name}}">
+            </md-input-container>
+        </td>
+    
+        <td >
+            <md-input-container>
+                <input  md-input readonly value="{{policyGroup.comment}}">
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input type="number" min=0 max="1" readonly md-input value="{{policyGroup.disabled}}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <button md-icon-button (click)="openPolicyGroupMembers(policyGroup)" >
+                <md-icon class="md-18">group_add</md-icon>
+            </button>
+        </td>
+        <td >
+            <button md-icon-button (click)="removePolicyGroups(policyGroup)">
+                <md-icon class="md-18">delete_forever</md-icon>
+            </button>
+        </td>
+    </tr>
+</table>

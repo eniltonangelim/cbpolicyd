@@ -4,6 +4,7 @@ export class Policies {
         public name?: String,
         public priority?: Number,
         public description?: String,
-        public disabled?: Boolean
+        public disabled?: Boolean,
+        public readonly?: Boolean,
     ){}
 }

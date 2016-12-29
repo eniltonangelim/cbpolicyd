@@ -1,9 +1,8 @@
-import { Policies } from './policies';
 
 export class Quotas {
     constructor(
         public id?: Number,
-        public policyID?: Policies,
+        public policyID?: Number,
         public track?: String,
         public period?: Number,
         public verdict?: String,

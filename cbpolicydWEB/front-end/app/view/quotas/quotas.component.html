@@ -1,0 +1,152 @@
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th> ID </th>
+            <th> Policy ID  </th>
+            <th> Track      </th>
+            <th> Priority   </th>
+            <th> Verdict    </th>
+            <th> Data       </th>
+            <th> Last Quota </th>
+            <th> Comment    </th>
+            <th> Disabled   </th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input> 
+            </md-input-container>
+        </td>
+        
+        <td >
+
+           <select  class="form-control" [(ngModel)]="newQuota.policyID" >
+               <option *ngFor="let policy of policies" [ngValue]="policy.id">
+                   {{policy.name}}
+               </option>
+           </select>
+           <!--
+            <md-input-container>
+                <input md-input readonly [(ngModel)]="newQuota.policyID" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+            -->
+        </td>
+    
+        <td >
+            <md-input-container>
+                <input md-input [(ngModel)]="newQuota.track" [ngModelOptions]="{standalone: true}" >
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input type="number" md-input [(ngModel)]="newQuota.period" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <md-input-container>
+                <input md-input [(ngModel)]="newQuota.verdict" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <md-input-container>
+                <input md-input [(ngModel)]="newQuota.data" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <md-input-container>
+                <input type="number" md-input [(ngModel)]="newQuota.lastQuota" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <md-input-container>
+                <input md-input [(ngModel)]="newQuota.comment" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <md-input-container>
+                <input type="number" min="0" max="1" size='1' maxlength="1" md-input [(ngModel)]="newQuota.disabled" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <button md-icon-button (click)="addQuotas()" >
+                <md-icon class="md-18">save</md-icon>
+            </button>
+        </td>
+
+        <td >
+            <button md-icon-button (click)="clearQuotas()">
+                <md-icon class="md-18">delete_forever</md-icon>
+            </button>
+        </td>
+
+    </tr>
+
+
+    <tr *ngFor="let quota of quotas" >
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.id}}"> 
+            </md-input-container>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.policyID}}"> 
+            </md-input-container>
+        </td>
+        <td> 
+            <span>{{quota.track}}</span>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.period}}"> 
+            </md-input-container>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.verdict}}"> 
+            </md-input-container>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.data}}"> 
+            </md-input-container>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.lastQuota}}"> 
+            </md-input-container>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.comment}}"> 
+            </md-input-container>
+        </td>
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{quota.disabled}}"> 
+            </md-input-container>
+        </td>
+     <td >
+        <button md-icon-button (click)="openQuotasLimits(quota)">
+             <md-icon class="md-18">group_add</md-icon>
+        </button>
+     </td>
+     <td >
+        <button md-icon-button (click)="deleteQuota(quota)">
+             <md-icon class="md-18">delete_forever</md-icon>
+        </button>
+     </td>
+    </tr>
+    </tbody>
+</table>

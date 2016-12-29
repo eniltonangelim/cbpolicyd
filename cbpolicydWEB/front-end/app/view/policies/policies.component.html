@@ -1,0 +1,97 @@
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th> ID </th>
+            <th> Name </th>
+            <th> Priority </th>
+            <th> Description </th>
+            <th> Disabled </th>
+        </tr>
+
+        <tr>
+            <td > 
+                <md-input-container> 
+                    <input type="number" readonly md-input [(ngModel)]="newPolicy.id" [ngModelOptions]="{standalone: true}"> 
+                </md-input-container>
+            </td>
+            
+            <td >
+                <md-input-container>
+                    <input (keyup)="changes(policy)" md-input [(ngModel)]="newPolicy.name" [ngModelOptions]="{standalone: true}">
+                </md-input-container>
+            </td>
+        
+            <td >
+                <md-input-container>
+                    <input type="number" min=0 max="100" md-input [(ngModel)]="newPolicy.priority" [ngModelOptions]="{standalone: true}" >
+                </md-input-container>
+            </td>
+        
+            <td >
+                <md-input-container>
+                    <input  md-input [(ngModel)]="newPolicy.description" [ngModelOptions]="{standalone: true}" >
+                </md-input-container>
+            </td>
+            
+            <td >
+                <md-input-container>
+                    <input type="number" min=0 max="1" md-input [(ngModel)]="newPolicy.disabled" [ngModelOptions]="{standalone: true}">
+                </md-input-container>
+            </td>
+            <td >
+                <button md-icon-button (click)="addPolicy()" >
+                    <md-icon class="md-18">save</md-icon>
+                </button>
+            </td>
+            <td >
+                <button md-icon-button (click)="clearPolicy()">
+                    <md-icon class="md-18">delete_forever</md-icon>
+                </button>
+            </td>
+        </tr>
+    </thead>
+<br/>
+    <tr *ngFor="let policy of policies" >
+        <td > 
+            <md-input-container> 
+                <input type="number" readonly md-input value="{{policy.id}}"> 
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input (keyup)="changes(policy)" readonly md-input value="{{policy.name}}">
+            </md-input-container>
+        </td>
+    
+        <td >
+            <md-input-container>
+                <input type="number" min=0 max="100" readonly md-input value="{{policy.priority}}">
+            </md-input-container>
+        </td>
+     
+        <td >
+            <md-input-container style="width: 100%">
+                <input  md-input  readonly value="{{policy.description}}">
+            </md-input-container>
+        </td>
+        
+        <td >
+            <md-input-container>
+                <input type="number" min=0 max="1" readonly md-input value="{{policy.disabled}}">
+            </md-input-container>
+        </td>
+
+        <td >
+            <button md-icon-button (click)="openPolicyMembers(policy)" >
+                <md-icon class="md-18">group_add</md-icon>
+            </button>
+        </td>
+        <td >
+            <button md-icon-button (click)="removePolicy(policy)">
+                <md-icon class="md-18">delete_forever</md-icon>
+            </button>
+        </td>
+    </tr>
+</table>
