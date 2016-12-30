@@ -30,7 +30,7 @@ var QuotasLimitsService = (function () {
             .then(function (response) { return response.json().data; });
     };
     QuotasLimitsService.prototype.getQuotasLimitsbyQuotasID = function (id) {
-        var url = this.quotasLimitsURL + "?policyGroupID=" + id;
+        var url = this.quotasLimitsURL + "?quotasID=" + id;
         console.log(url);
         return this.http.get(url)
             .toPromise()

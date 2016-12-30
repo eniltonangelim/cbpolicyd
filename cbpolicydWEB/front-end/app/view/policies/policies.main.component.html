@@ -1,0 +1,210 @@
+ <md-tab-group>
+
+    <md-tab>
+      <template md-tab-label>
+          Wiki - Em construção
+      </template>
+        <img src="app/view/diagrama/CBpolicyDACL.png" style="height:900px">
+    </md-tab>
+
+    <md-tab>
+      <template md-tab-label>
+          Zimbra
+      </template>
+      
+<h1 id="zimbra-cbpolicyd">Zimbra CBPolicyd</h1>
+<h2 id="enable">Enable</h2>
+<pre><code class="lang-bash">zmprov ms `zmhostname` +zimbraServiceEnabled cbpolicyd
+</code></pre>
+<h3 id="post-fix-config">Post-fix config</h3>
+<pre><code class="lang-bash">smtpd_end_of_data_restrictions = check_policy_service inet:localhost:10031
+smtpd_recipient_restrictions = check_policy_service inet:localhost:10031, reject_non_fqdn_recipient, permit_sasl_authenticated, permit_mynetworks, reject_unlisted_recipient, reject_invalid_helo_hostname, reject_non_fqdn_sender, permit
+smtpd_sender_restrictions = check_policy_service inet:localhost:10031, check_sender_access regexp:/opt/zimbra/common/conf/tag_as_originating.re, permit_mynetworks, permit_sasl_authenticated, permit_tls_clientcerts, check_sender_access regexp:/opt/zimbra/common/conf/tag_as_foreign.re
+</code></pre>
+<h3 id="tcp-socket">TCP - Socket</h3>
+<pre><code class="lang-bash">LISTEN     0      128    127.0.0.1:10031                    *:*                   users:((&quot;cbpolicyd&quot;,pid=27359,fd=6),(&quot;cbpolicyd&quot;,pid=27358,fd=6),(&quot;cbpolicyd&quot;,pid=27357,fd=6),(&quot;cbpolicyd&quot;,pid=27356,fd=6),(&quot;cbpolicyd&quot;,pid=27354,fd=6))
+LISTEN     0      128        ::1:10031                   :::*                   users:((&quot;cbpolicyd&quot;,pid=27359,fd=5),(&quot;cbpolicyd&quot;,pid=27358,fd=5),(&quot;cbpolicyd&quot;,pid=27357,fd=5),(&quot;cbpolicyd&quot;,pid=27356,fd=5),(&quot;cbpolicyd&quot;,pid=27354,fd=5))
+</code></pre>
+<h3 id="log-opt-zimbra-log-cbpolicyd-log">Log: /opt/zimbra/log/cbpolicyd.log</h3>
+<pre><code class="lang-text">[2016/11/14-08:56:11 - 27354] [CBPOLICYD] NOTICE: Session tracking is ENABLED.
+[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: 2016/11/14-08:56:11 cbp (type Net::Server::PreFork) starting! pid(27354)
+[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Resolved [localhost]:10031 to [::1]:10031, IPv6
+[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Resolved [localhost]:10031 to [127.0.0.1]:10031, IPv4
+[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Binding to TCP port 10031 on host ::1 with IPv6
+[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Binding to TCP port 10031 on host 127.0.0.1 with IPv4
+[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Setting gid to &quot;994 994&quot;
+[2016/11/14-08:56:11 - 27354] [CORE] INFO: Setting up serialization via flock
+[2016/11/14-08:56:11 - 27354] [CORE] INFO: Beginning prefork (4 processes)
+[2016/11/14-08:56:11 - 27354] [CORE] INFO: Starting &quot;4&quot; children
+</code></pre>
+<h2 id="disable">Disable</h2>
+<pre><code class="lang-bash">zmprov ms `zmhostname` -zimbraServiceEnabled cbpolicyd
+</code></pre>
+<h2 id="policyd-webui">Policyd - WebUI</h2>
+<blockquote>
+<p>Execute os comandos a seguir como usuário root</p>
+</blockquote>
+<pre><code class="lang-bash">cd /opt/zimbra/data/httpd/htdocs/ &amp;&amp; ln -s ../../../common/share/webui
+</code></pre>
+<p>vi opt/zimbra/common/share/webui/includes/config.php</p>
+<pre><code class="lang-bash">$DB_DSN=&quot;sqlite:/opt/zimbra/data/cbpolicyd/db/cbpolicyd.sqlitedb&quot;;
+</code></pre>
+<p>Reinicie o Zimbra</p>
+<pre><code class="lang-bash">su - zimbra -c &quot;zmcontrol restart&quot;
+su - zimbra -c &quot;zmapachectl restart&quot;
+</code></pre>
+<p>Acesso à aplicação</p>
+<p><a href="http://zimbra:7780/webui/index.php">http://zimbra:7780/webui/index.php</a></p>
+<h2 id="quotas-cbpolicyd-ordem-de-configura-o">Quotas CBPolicyd - Ordem de configuração</h2>
+<p>Primeiramente, são necessários dois passos:</p>
+<pre><code>1. Cria a politica na tabela *policies*
+2. Configure os membros da diretiva recém-criada na tabela policy_members
+
+a) Se não usarmos os *grupos*, então após configurar a politica e os membros de politica, nós editamos a tabela *quota* e *quota_limits*
+b) Se você configurar os *grupos*, então após configurar as politicas, nós configuramos os *grupos* e então as *quotas*
+</code></pre><p>Tipos de dados:</p>
+<pre><code class="lang-typescript">yes:Boolean = 1;
+no:Boolean = 0;
+</code></pre>
+<ul>
+<li>Criando uma politica</li>
+</ul>
+<blockquote>
+<p>Prioridade 0, significa que será escolhido primeiro a partir da lista das políticas.</p>
+</blockquote>
+<pre><code class="lang-sql">insert into policies(Name,Priority,Disabled) VALUES (&#39;test_policy&#39;,0,0);
+</code></pre>
+<ul>
+<li>Criando os membros da politica</li>
+</ul>
+<blockquote>
+<p>A coluna <em>PolicyID</em> da tabela <em>policy_members</em> aponta para o ID da tabela <em>policies</em></p>
+</blockquote>
+<p>Com <em>grupo</em></p>
+<blockquote>
+<p>A coluna <em>Source</em> não aceita dois grupos, ou seja, crie um novo registro para cada grupo</p>
+</blockquote>
+<pre><code class="lang-sql">insert into policy_members(PolicyID,Source,Destination,Disabled) VALUES (1,&#39;%test_group&#39;,&#39;any&#39;,0);
+</code></pre>
+<p>Sem <em>grupo</em></p>
+<pre><code class="lang-sql">insert into policy_members(PolicyID,Source,Destination,Disabled) VALUES (1,&#39;user@mydomain.com&#39;,&#39;any&#39;,0);
+</code></pre>
+<p>Valores aceitos na coluna <em>Source</em> e <em>Destination</em></p>
+<pre><code class="lang-text">Format of key:
+NULL = any
+a.b.c.d/e = IP address with optional /e
+@domain = domain specification,
+%xyz = xyz group,
+abc@domain = abc user specification
+
+all options support negation using !&lt;key&gt;
+</code></pre>
+<ul>
+<li><p>Adicionando o grupo</p>
+</li>
+<li><p>Grupo <em>test_group</em></p>
+</li>
+</ul>
+<pre><code class="lang-sql">insert into policy_groups(Name,Disabled) VALUES (&#39;test_group&#39;,0);
+</code></pre>
+<ol>
+<li>Cria os membros para o grupo <em>test_grupos</em></li>
+</ol>
+<blockquote>
+<p>Formato de entrada da coluna <em>Member</em>: a.b.c.d/e = ip,  @domain = domain, %xyz = xyz group, abc@domain = abc user</p>
+</blockquote>
+<pre><code class="lang-sql">insert into policy_group_members(PolicyGroupID,Member,Disabled) VALUES (1,&#39;testuser@mydomain&#39;,0);
+insert into policy_group_members(PolicyGroupID,Member,Disabled) VALUES (1,&#39;192.168.56.10/24&#39;,0);
+</code></pre>
+<p>&quot;O exemplo acima mostra que todas as cotas, apontando para a política ID 1, estarão forçando suas regras em testuser@mydomain, máquina com ip 192.168.56.10 e user@mydomain.com, especificada como ID 2 na tabela policy_members. Além disso, como no exemplo anterior, o PolicyGroupID está apontando para um ID de entrada de policy_groups específico. No nosso caso está apontando para ID 1.&quot;</p>
+<p>Fonte: wiki.zimbra.com</p>
+<ul>
+<li>Configurando a <em>quota</em></li>
+</ul>
+<p>Formato de entrada para a coluna <em>Track</em></p>
+<pre><code class="lang-text">SenderIP: /24
+Sender &amp; Recipient: ou user@domain ou user@ ou @domain
+</code></pre>
+<ol>
+<li>Cria a <em>quota</em></li>
+</ol>
+<pre><code class="lang-sql">insert into quotas(PolicyID,Name,Track,Period,Verdict,Data,Disabled) VALUES (1,&#39;test_quota&#39;,&#39;Sender:user@domain&#39;,120,&#39;DEFER&#39;,&#39;User has been deferred for two minutes&#39;,0);
+</code></pre>
+<ol>
+<li>Cria a restrição</li>
+</ol>
+<pre><code class="lang-sql">insert into quotas_limits(QuotasID,Type,CounterLimit,Disabled) VALUES (1,&#39;MessageCount&#39;,2,0);
+</code></pre>
+<p>Tipo de restrição</p>
+<pre><code>1. MessageCount
+2. MessageCumulativeSize
+</code></pre><p>&quot;Os comandos acima estão impondo uma quota que está restringindo todos os usuários em% test_group e user@mydomain.com para não enviar mais de duas mensagens em um intervalo de tempo de dois minutos. Observe que a cota está apontando para uma diretiva específica. Temos apenas uma política, portanto, ela aponta para a diretiva ID 1. A tabela quota_limits tem uma entrada que está apontando para a cota da tabela de cota. Em vez de &quot;Sender&quot;, podemos especificar &quot;Destinatário&quot;, que irá limitar os e-mails recebidos pelo usuário / grupo.&quot;</p>
+<p>Fonte: wiki.zimbra.com</p>
+<h3 id="exemplo">Exemplo</h3>
+<ul>
+<li><p>Rate limit any sender from sending more then 20 emails every 60 seconds.  Messages beyond this limit are deferred.</p>
+</li>
+<li><p>Rate limit any @domain from receiving more then 50 emails in a 60 second period.  Messages beyond this rate are rejected.</p>
+</li>
+</ul>
+<p>sqlite3 /opt/zimbra/data/cbpolicyd/db/cbpolicyd.sqlitedb  &lt;access_control.sql</p>
+<pre><code class="lang-sql">BEGIN TRANSACTION;
+INSERT INTO &quot;policies&quot; VALUES(6, &#39;Zimbra&#39;, 0, &#39;Zimbra QA Test Policy&#39;, 0);
+DELETE FROM sqlite_sequence;
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;policies&#39;, 6);
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;policy_members&#39;, 6);
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;policy_groups&#39;, 2);
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;policy_group_members&#39;, 3);
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;quotas&#39;, 4);
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;quotas_limits&#39;, 5);
+INSERT INTO &quot;sqlite_sequence&quot; VALUES(&#39;checkhelo_blacklist&#39;, 4);
+INSERT INTO &quot;policy_members&quot; VALUES(6, 6, &#39;any&#39;, &#39;any&#39;, , 0);
+INSERT INTO &quot;quotas&quot; VALUES(3, 6, &#39;Sender:user@domain&#39;,&#39;Sender:user@domain&#39;, 60, &#39;DEFER&#39;, &#39;Deferring: Too many messages from sender in last 60&#39;, , 0);
+INSERT INTO &quot;quotas&quot; VALUES(4, 6, &#39;Recipient:@domain&#39;, &#39;Recipient:@domain&#39;, 60, &#39;REJECT&#39;, , , 0);
+INSERT INTO &quot;quotas_limits&quot; VALUES(4, 3, &#39;MessageCount&#39;, 20, , 0);
+INSERT INTO &quot;quotas_limits&quot; VALUES(5, 4, &#39;MessageCount&#39;, 50, , 0);
+COMMIT;
+</code></pre>
+<h2 id="access-control-cbpolicyd-ordem-de-configura-o">Access Control CBPolicyd - Ordem de configuração</h2>
+<p>Na teoria a configuração para restringir o envio local de email para uma lista de contas estar descrita logo abaixo, contudo não funcionou no nosso servidor de email.</p>
+<h2 id="m-dulo-access_control">Módulo access_control</h2>
+<pre><code class="lang-text">zmlocalconfig -e cbpolicyd_module_accesscontrol=1
+zmlocalconfig -e postfix_enable_smtpd_policyd=yes
+zmlocalconfig -e cbpolicyd_log_level=4
+zmlocalconfig -e cbpolicyd_module_accesscontrol=1 cbpolicyd_module_quotas=1
+</code></pre>
+<ul>
+<li>Zimbra 8.0.x</li>
+</ul>
+<pre><code class="lang-text">su – zimbra
+zmprov ms `zmhostname` +zimbraServiceInstalled cbpolicyd +zimbraServiceEnabled cbpolicyd
+zmlocalconfig -e postfix_enable_smtpd_policyd=yes
+zmprov mcf +zimbraMtaRestriction “check_policy_service inet:127.0.0.1:10031”
+</code></pre>
+<ul>
+<li>Zimbra 8.5.x</li>
+</ul>
+<pre><code class="lang-text">su - zimbra
+zmprov ms `zmhostname` zimbraCBPolicydAccessControlEnabled TRUE
+</code></pre>
+<pre><code class="lang-text">zmmtactl stop
+zmmtactl start
+zmcbpolicydctl restart
+</code></pre>
+<h3 id="cbpolicyd-configura-o">CBPolicyd - Configuração</h3>
+<p>sqlite3 /opt/zimbra/data/cbpolicyd/db/cbpolicyd.sqlitedb  &lt;access_control.sql</p>
+<ul>
+<li>_access<em>control.sql</em></li>
+</ul>
+<pre><code class="lang-sql">BEGIN TRANSACTION;
+INSERT INTO &quot;policies&quot; (ID,Name,Priority,Description) VALUES (6, &#39;homologa&#39;, 0, &#39;Teste: Somente envio local&#39;);
+INSERT INTO &quot;policy_members&quot; (PolicyID,Source,Destination) VALUES(6, &#39;%local_user&#39;, &#39;!%local_domain&#39;);
+INSERT INTO &quot;policy_groups&quot;  (ID,Name,Disabled,Comment)  VALUES (3, &#39;local_user&#39;, 0, &#39;Lista de contas&#39;);
+INSERT INTO &quot;policy_groups&quot;  (ID,Name,Disabled,Comment)  VALUES (4, &#39;local_domain&#39;, 0, &#39;Teste: Lista de domínio&#39;);
+INSERT INTO &quot;policy_group_members&quot; (ID, PolicyGroupID, Member, Disabled, Comment) VALUES (4, 3, &#39;f13@labz.localhost.local&#39;,0,&#39;Somente envio local&#39;);
+INSERT INTO &quot;policy_group_members&quot; (ID, PolicyGroupID, Member, Disabled, Comment) VALUES (5, 4, &#39;@labz.localhost.local&#39;, 0, &#39;Somente envio local&#39;);
+INSERT INTO &quot;access_control&quot; (ID, PolicyID, Name, Verdict, Data, Comment, Disabled)  VALUES (1,6,&#39;homologa_acl&#39;, &#39;REJECT&#39;, &#39;Access Denied&#39;, &#39;Somente envio local&#39;, 0);
+COMMIT;
+</code></pre>
+    </md-tab>
+</md-tab-group>

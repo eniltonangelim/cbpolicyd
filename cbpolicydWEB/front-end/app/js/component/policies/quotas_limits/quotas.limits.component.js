@@ -74,6 +74,7 @@ var QuotasLimitsComponent = (function () {
         this.newQuotasLimits = new quotas_limits_1.QuotasLimits;
         this.newQuotasLimits.id = null;
         this.newQuotasLimits.quotasID = this.quotas.quota.id;
+        this.newQuotasLimits.type = null;
         this.newQuotasLimits.counterLimit = null;
         this.newQuotasLimits.comment = null;
         this.newQuotasLimits.disabled = 0;

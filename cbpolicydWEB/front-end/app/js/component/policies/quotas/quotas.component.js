@@ -20,6 +20,7 @@ var QuotasComponent = (function () {
         this.modalService = modalService;
         this.policiesService = policiesService;
         this.quotasService = quotasService;
+        this.verdicts = ['HOLD', 'REJECT', 'DISCARD', 'FILTER', 'REDIRECT', 'OK'];
         overlay.defaultViewContainer = vcRef;
     }
     QuotasComponent.prototype.getQuotas = function () {
@@ -38,6 +39,7 @@ var QuotasComponent = (function () {
         this.newQuota = new quotas_1.Quotas;
         this.newQuota.id = null;
         this.newQuota.policyID = null;
+        this.newQuota.name = null;
         this.newQuota.track = null;
         this.newQuota.period = null;
         this.newQuota.verdict = null;
@@ -53,7 +55,7 @@ var QuotasComponent = (function () {
         }
         this.quotasService.create(this.newQuota).then(function (quota) {
             _this.quotas.push(quota);
-            _this.newQuota = new quotas_1.Quotas;
+            _this.montaQuota();
         });
     };
     QuotasComponent.prototype.deleteQuota = function (quota) {
@@ -71,7 +73,7 @@ var QuotasComponent = (function () {
         this.montaQuota();
     };
     QuotasComponent.prototype.openQuotasLimits = function (quotas) {
-        var builder = new bootstrap_1.BSModalContextBuilder({ quotas: quotas }, undefined, quotas_limits_component_1.CustomModalContext);
+        var builder = new bootstrap_1.BSModalContextBuilder({ quota: quotas }, undefined, quotas_limits_component_1.CustomModalContext);
         var overlayConfig = {
             context: builder.toJSON()
         };

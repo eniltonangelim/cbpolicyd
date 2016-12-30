@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <md-toolbar color="primary">
-        <span></span>
+        <span>{{title}}</span>
 
         <span style="flex: 1 1 auto"></span>  
 
@@ -21,7 +21,7 @@
                     <th> Disabled </th>
                 </tr>
             </thead>
-<!--
+
             <tbody>
 
                 <tr >
@@ -34,13 +34,13 @@
         
                     <td >
                         <md-input-container>
-                            <input md-input [value]="newQuotasLimits.quotasID" (input)="newQuotasLimits.quotasID = $event.target.value" readonly>
+                            <input md-input value="{{newQuotasLimits.quotasID}}" readonly>
                         </md-input-container>
                     </td>
         
                     <td >
                         <md-input-container>
-                            <input md-input [value]="newQuotasLimits.type" (input)="newQuotasLimits.type = $event.target.value" >
+                            <input title="Exemplo: MessageCount ou MessageCumulativeSize" md-input [value]="newQuotasLimits.type" (input)="newQuotasLimits.type = $event.target.value" >
                         </md-input-container>
                     </td>
 
@@ -59,6 +59,7 @@
                     <td >
                         <md-input-container>
                             <input type="number" min=0 max="1" md-input [value]="newQuotasLimits.disabled" (input)="newQuotasLimits.disabled = $event.target.value">
+                            <md-hint align="end"><span>0 ou 1</span></md-hint>
                         </md-input-container>
                     </td>
                     <td >
@@ -72,7 +73,7 @@
                         </button>
                     </td>
                 </tr> 
-
+<br/>
                 <tr *ngFor="let quotasLimit of quotasLimits" >
                     <td >{{quotasLimit.id}}              </td>
                     <td >{{quotasLimit.quotasID}}        </td>
@@ -89,7 +90,7 @@
                 </tr>
 
             </tbody>
--->
+
         </table>
     </div>
 </div>

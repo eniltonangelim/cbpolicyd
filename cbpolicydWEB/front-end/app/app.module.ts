@@ -34,9 +34,9 @@ import { MaterialModule }               from '@angular/material';
 
 @NgModule({
   imports:      [ 
-  	MaterialModule.forRoot(), PolicyMembersModule, PoliciesModule, QuotasModule,
+  	MaterialModule.forRoot(), PolicyMembersModule, PoliciesModule, QuotasLimitsModule, QuotasModule,
     AccessControlModule, PolicyGroupMembersModule, PolicyGroupsModule,
-    BrowserModule, ModalModule.forRoot(), QuotasLimitsModule,
+    BrowserModule, ModalModule.forRoot(), 
     FormsModule, HttpModule, 
     InMemoryWebApiModule.forRoot(InMemoryDataPoliciesService),
     AppRoutingModule, 

@@ -39,7 +39,7 @@
         
                     <td >
                         <md-input-container>
-                            <input md-input [value]="newPolicyGroupMembers.member" (input)="newPolicyGroupMembers.member = $event.target.value" >
+                            <input title="Exemplo: a.b.c.d/e ; [!]@domain; [!]%group; [!]abc@domain" md-input [value]="newPolicyGroupMembers.member" (input)="newPolicyGroupMembers.member = $event.target.value" >
                         </md-input-container>
                     </td>
 
@@ -52,6 +52,7 @@
                     <td >
                         <md-input-container>
                             <input type="number" min=0 max="1" md-input [value]="newPolicyGroupMembers.disabled" (input)="newPolicyGroupMembers.disabled = $event.target.value">
+                            <md-hint align="end"><span>0 ou 1</span></md-hint>
                         </md-input-container>
                     </td>
                     <td >

@@ -41,9 +41,9 @@ var AppModule = (function () {
 AppModule = __decorate([
     core_1.NgModule({
         imports: [
-            material_1.MaterialModule.forRoot(), policy_members_module_1.PolicyMembersModule, policies_module_1.PoliciesModule, quotas_module_1.QuotasModule,
+            material_1.MaterialModule.forRoot(), policy_members_module_1.PolicyMembersModule, policies_module_1.PoliciesModule, quotas_limits_module_1.QuotasLimitsModule, quotas_module_1.QuotasModule,
             access_control_module_1.AccessControlModule, policy_group_members_module_1.PolicyGroupMembersModule, policy_groups_module_1.PolicyGroupsModule,
-            platform_browser_1.BrowserModule, angular2_modal_1.ModalModule.forRoot(), quotas_limits_module_1.QuotasLimitsModule,
+            platform_browser_1.BrowserModule, angular2_modal_1.ModalModule.forRoot(),
             forms_1.FormsModule, http_1.HttpModule,
             angular_in_memory_web_api_1.InMemoryWebApiModule.forRoot(in_memory_data_policies_service_1.InMemoryDataPoliciesService),
             app_routing_module_1.AppRoutingModule,

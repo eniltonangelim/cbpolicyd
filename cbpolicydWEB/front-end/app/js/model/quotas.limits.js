@@ -1,9 +1,9 @@
 "use strict";
 var QuotasLimits = (function () {
-    function QuotasLimits(id, quotasID, types, counterLimit, comment, disabled) {
+    function QuotasLimits(id, quotasID, type, counterLimit, comment, disabled) {
         this.id = id;
         this.quotasID = quotasID;
-        this.types = types;
+        this.type = type;
         this.counterLimit = counterLimit;
         this.comment = comment;
         this.disabled = disabled;

@@ -22,7 +22,7 @@ export class QuotasComponent implements OnInit {
     private quotas: Quotas[];
     private newQuota: Quotas;
     private policies: Policies;
-
+    private verdicts = ['HOLD', 'REJECT', 'DISCARD',  'FILTER',  'REDIRECT',  'OK' ];
 
     constructor (overlay: Overlay, vcRef: ViewContainerRef, public modalService: Modal,private policiesService: PoliciesService, private quotasService: QuotasService) 
     {
@@ -45,6 +45,7 @@ export class QuotasComponent implements OnInit {
         this.newQuota = new Quotas;
         this.newQuota.id = null;
         this.newQuota.policyID = null;
+        this.newQuota.name = null;
         this.newQuota.track = null;
         this.newQuota.period = null;
         this.newQuota.verdict = null;
@@ -59,7 +60,7 @@ export class QuotasComponent implements OnInit {
         this.quotasService.create(this.newQuota).then(
             quota => {
                 this.quotas.push(quota);
-                this.newQuota = new Quotas;
+                this.montaQuota();
             }
         )
     }
@@ -84,7 +85,7 @@ export class QuotasComponent implements OnInit {
 
     openQuotasLimits(quotas: Quotas){
         const builder = new BSModalContextBuilder<CustomModalContext>(
-            {quotas: quotas} as any,
+            {quota: quotas} as any,
             undefined,
             CustomModalContext
         );

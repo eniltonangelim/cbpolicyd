@@ -1,11 +1,13 @@
-<table class="table table-striped">
-
+<div class="container-fluid">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed">
     <thead>
         <tr>
             <th> ID </th>
             <th> Policy ID  </th>
+            <th> Name       </th>
             <th> Track      </th>
-            <th> Priority   </th>
+            <th> Period   </th>
             <th> Verdict    </th>
             <th> Data       </th>
             <th> Last Quota </th>
@@ -29,29 +31,34 @@
                    {{policy.name}}
                </option>
            </select>
-           <!--
-            <md-input-container>
-                <input md-input readonly [(ngModel)]="newQuota.policyID" [ngModelOptions]="{standalone: true}">
-            </md-input-container>
-            -->
+
         </td>
-    
+
         <td >
             <md-input-container>
-                <input md-input [(ngModel)]="newQuota.track" [ngModelOptions]="{standalone: true}" >
+                <input md-input [(ngModel)]="newQuota.name" [ngModelOptions]="{standalone: true}" >
+            </md-input-container>
+        </td>
+
+        <td >
+            <md-input-container>
+                <input title="Exemplo: SenderIP: a.b.c.d/e ; Sender & Recipient: abc@, @domain, abc@domain" md-input [(ngModel)]="newQuota.track" [ngModelOptions]="{standalone: true}" >
             </md-input-container>
         </td>
         
         <td >
             <md-input-container>
                 <input type="number" md-input [(ngModel)]="newQuota.period" [ngModelOptions]="{standalone: true}">
+                <md-hint align="end"><span>In seconds</span></md-hint>
             </md-input-container>
         </td>
 
         <td >
-            <md-input-container>
-                <input md-input [(ngModel)]="newQuota.verdict" [ngModelOptions]="{standalone: true}">
-            </md-input-container>
+            <select  class="form-control" [(ngModel)]="newQuota.verdict" >
+               <option *ngFor="let verdict of verdicts" [ngValue]="verdict">
+                   {{verdict}}
+               </option>
+           </select>
         </td>
 
         <td >
@@ -75,6 +82,7 @@
         <td >
             <md-input-container>
                 <input type="number" min="0" max="1" size='1' maxlength="1" md-input [(ngModel)]="newQuota.disabled" [ngModelOptions]="{standalone: true}">
+                <md-hint align="end"><span>0 ou 1</span></md-hint>
             </md-input-container>
         </td>
 
@@ -92,6 +100,7 @@
 
     </tr>
 
+<br/>
 
     <tr *ngFor="let quota of quotas" >
         <td > 
@@ -103,6 +112,9 @@
             <md-input-container> 
                 <input type="number" readonly md-input value="{{quota.policyID}}"> 
             </md-input-container>
+        </td>
+        <td> 
+            <span>{{quota.name}}</span>
         </td>
         <td> 
             <span>{{quota.track}}</span>
@@ -150,3 +162,5 @@
     </tr>
     </tbody>
 </table>
+</div>
+</div>

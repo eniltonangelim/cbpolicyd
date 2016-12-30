@@ -3,6 +3,7 @@ export class Quotas {
     constructor(
         public id?: Number,
         public policyID?: Number,
+        public name?: String,
         public track?: String,
         public period?: Number,
         public verdict?: String,

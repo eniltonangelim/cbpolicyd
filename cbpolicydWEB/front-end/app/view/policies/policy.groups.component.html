@@ -1,5 +1,6 @@
-<table class="table table-striped">
-
+<div class="container-fluid">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed">
     <thead>
         <tr>
             <th> ID </th>
@@ -8,7 +9,7 @@
             <th> Disabled </th>
         </tr>
     </thead>
-
+    <tbody>
     <tr>
         <td > 
             <md-input-container> 
@@ -31,6 +32,7 @@
         <td >
             <md-input-container>
                 <input type="number" min=0 max="1" md-input [(ngModel)]="newPolicyGroups.disabled" [ngModelOptions]="{standalone: true}">
+                <md-hint align="end"><span>0 ou 1</span></md-hint>
             </md-input-container>
         </td>
 
@@ -87,4 +89,7 @@
             </button>
         </td>
     </tr>
+    </tbody>
 </table>
+</div>
+</div>

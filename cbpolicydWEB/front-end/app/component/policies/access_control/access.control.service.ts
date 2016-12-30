@@ -32,15 +32,17 @@ export class AccessControlService {
         .catch(this.handleError);
     }
 
-    create(name: string): Promise<any> {
+    create(accessControl: AccessControl): Promise<any> {
+        console.log(accessControl);
         return this.http
-        .post(this.accessControlURL, JSON.stringify({name: name}), {headers: this.headers})
+        .post(this.accessControlURL, JSON.stringify(accessControl), {headers: this.headers})
         .toPromise()
         .then(res => res.json().data)
         .catch(this.handleError);
     }
 
     update(accessControl: AccessControl): Promise<AccessControl> {
+        
         const url = `${this.accessControlURL}/${accessControl.id}`;
         return this.http
         .put(url, JSON.stringify(accessControl), {headers: this.headers})

@@ -35,9 +35,10 @@ var AccessControlService = (function () {
             .then(function () { return null; })
             .catch(this.handleError);
     };
-    AccessControlService.prototype.create = function (name) {
+    AccessControlService.prototype.create = function (accessControl) {
+        console.log(accessControl);
         return this.http
-            .post(this.accessControlURL, JSON.stringify({ name: name }), { headers: this.headers })
+            .post(this.accessControlURL, JSON.stringify(accessControl), { headers: this.headers })
             .toPromise()
             .then(function (res) { return res.json().data; })
             .catch(this.handleError);

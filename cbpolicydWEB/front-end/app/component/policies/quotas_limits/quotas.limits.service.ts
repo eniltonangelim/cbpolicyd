@@ -25,7 +25,7 @@ export class QuotasLimitsService {
     }
 
     getQuotasLimitsbyQuotasID(id: number): Promise<QuotasLimits[]> {
-        const url = `${this.quotasLimitsURL}?policyGroupID=${id}`;
+        const url = `${this.quotasLimitsURL}?quotasID=${id}`;
         console.log(url);
         return this.http.get(url)
             .toPromise()

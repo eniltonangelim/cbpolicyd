@@ -32,7 +32,13 @@ var InMemoryDataPoliciesService = (function () {
             { id: 4, policyID: 4, source: '%internal_ips,%internal_domains', destination: '%internal_domains', comment: '', disabled: 0 },
             { id: 5, policyID: 2, source: '@example.net', destination: '@f13.com.br', comment: '', disabled: 0 }
         ];
-        return { policies: policies, quotas: quotas, accessControl: accessControl, policyGroups: policyGroups, policyMembers: policyMembers, policyGroupMembers: policyGroupMembers };
+        var quotasLimits = [
+            { id: 1, quotasID: 1, type: 'MessageCount', counterLimit: 10, comment: '', disabled: 0 },
+            { id: 2, quotasID: 1, type: 'MessageCumulativeSize', counterLimit: 8000, comment: '', disabled: 0 },
+            { id: 3, quotasID: 2, type: 'MessageCount', counterLimit: 12, comment: '', disabled: 0 },
+            { id: 4, quotasID: 1, type: 'MessageCount', counterLimit: 15, comment: '', disabled: 1 }
+        ];
+        return { policies: policies, quotas: quotas, accessControl: accessControl, policyGroups: policyGroups, policyMembers: policyMembers, policyGroupMembers: policyGroupMembers, quotasLimits: quotasLimits };
     };
     return InMemoryDataPoliciesService;
 }());
