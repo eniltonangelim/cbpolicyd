@@ -1,72 +1,5 @@
 # Zimbra CBPolicyd
 
-## Enable
-
-```bash
-zmprov ms `zmhostname` +zimbraServiceEnabled cbpolicyd
-```
-
-### Post-fix config
-
-```bash
-smtpd_end_of_data_restrictions = check_policy_service inet:localhost:10031
-smtpd_recipient_restrictions = check_policy_service inet:localhost:10031, reject_non_fqdn_recipient, permit_sasl_authenticated, permit_mynetworks, reject_unlisted_recipient, reject_invalid_helo_hostname, reject_non_fqdn_sender, permit
-smtpd_sender_restrictions = check_policy_service inet:localhost:10031, check_sender_access regexp:/opt/zimbra/common/conf/tag_as_originating.re, permit_mynetworks, permit_sasl_authenticated, permit_tls_clientcerts, check_sender_access regexp:/opt/zimbra/common/conf/tag_as_foreign.re
-```
-
-### TCP - Socket
-
-```bash
-LISTEN     0      128    127.0.0.1:10031                    *:*                   users:(("cbpolicyd",pid=27359,fd=6),("cbpolicyd",pid=27358,fd=6),("cbpolicyd",pid=27357,fd=6),("cbpolicyd",pid=27356,fd=6),("cbpolicyd",pid=27354,fd=6))
-LISTEN     0      128        ::1:10031                   :::*                   users:(("cbpolicyd",pid=27359,fd=5),("cbpolicyd",pid=27358,fd=5),("cbpolicyd",pid=27357,fd=5),("cbpolicyd",pid=27356,fd=5),("cbpolicyd",pid=27354,fd=5))
-```
-
-### Log: /opt/zimbra/log/cbpolicyd.log
-
-```text
-[2016/11/14-08:56:11 - 27354] [CBPOLICYD] NOTICE: Session tracking is ENABLED.
-[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: 2016/11/14-08:56:11 cbp (type Net::Server::PreFork) starting! pid(27354)
-[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Resolved [localhost]:10031 to [::1]:10031, IPv6
-[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Resolved [localhost]:10031 to [127.0.0.1]:10031, IPv4
-[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Binding to TCP port 10031 on host ::1 with IPv6
-[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Binding to TCP port 10031 on host 127.0.0.1 with IPv4
-[2016/11/14-08:56:11 - 27354] [CORE] NOTICE: Setting gid to "994 994"
-[2016/11/14-08:56:11 - 27354] [CORE] INFO: Setting up serialization via flock
-[2016/11/14-08:56:11 - 27354] [CORE] INFO: Beginning prefork (4 processes)
-[2016/11/14-08:56:11 - 27354] [CORE] INFO: Starting "4" children
-```
-
-## Disable
-
-```bash
-zmprov ms `zmhostname` -zimbraServiceEnabled cbpolicyd
-```
-
-## Policyd - WebUI
-
-> Execute os comandos a seguir como usuário root
-
-```bash
-cd /opt/zimbra/data/httpd/htdocs/ && ln -s ../../../common/share/webui
-```
-
-vi opt/zimbra/common/share/webui/includes/config.php
-
-```bash
-$DB_DSN="sqlite:/opt/zimbra/data/cbpolicyd/db/cbpolicyd.sqlitedb";
-```
-
-Reinicie o Zimbra
-
-```bash
-su - zimbra -c "zmcontrol restart"
-su - zimbra -c "zmapachectl restart"
-```
-
-Acesso à aplicação
-
-http://zimbra:7780/webui/index.php
-
 ## Quotas CBPolicyd - Ordem de configuração
 
 Primeiramente, são necessários dois passos:
@@ -256,3 +189,208 @@ INSERT INTO "policy_group_members" (ID, PolicyGroupID, Member, Disabled, Comment
 INSERT INTO "access_control" (ID, PolicyID, Name, Verdict, Data, Comment, Disabled)  VALUES (1,6,'homologa_acl', 'REJECT', 'Access Denied', 'Somente envio local', 0);
 COMMIT;
 ```
+
+
+## Laboratório: Limite de envio para o usuario foo@bar
+
+1. Crie o grupo que receberá a diretiva
+
+```sql
+INSERT INTO policy_groups(Name,Disabled) VALUES ('limitToSender',0);
+```
+
+2. Configure o usuário _foo@bar_ como membro do grupo *_limitToSender_*
+
+```sql
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (6,'foo@bar',0);
+```
+
+3. Crie a política _"Limit Sender"_
+
+```sql
+INSERT INTO policies(Name,Priority,Disabled) VALUES ('Limit Sender',0,0);
+```
+
+4. Configure o grupo *_limitToSender_* como membro da política *_Limit Sender_*
+
+```sql
+INSERT INTO policy_members(PolicyID,Source,Destination,Disabled) VALUES (6,'%limitToSender','any',0);
+```
+
+5. Crie a cota para a política *_Limit Sender_*
+
+A configuração abaixo adiará por 5 minutos o envio da mensagem que excedeu o limite da cota.
+
+```sql
+INSERT INTO quotas(PolicyID,Name,Track,Period,Verdict,Data,Disabled) VALUES (6,'Limit Sender Quota','Sender:user@domain',300,'DEFER','User has been deferred for five minutes',0);
+```
+
+6. Configure o tipo de restrição para a cota *_Limit Sender_*
+
+Limita o envio de 10 mensagens por 5 minutos.
+
+```sql
+INSERT INTO quotas_limits(QuotasID,Type,CounterLimit,Disabled) VALUES (6,'MessageCount',10,0);
+```
+
+7. Script SQL
+
+```sql
+BEGIN TRANSACTION
+INSERT INTO policy_groups(Name,Disabled) VALUES ('limitToSender',0);
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (3,'foo@bar',0);
+INSERT INTO policies(Name,Priority,Disabled) VALUES ('Limit Sender',0,0);
+INSERT INTO policy_members(PolicyID,Source,Destination,Disabled) VALUES (6,'%limitToSender','any',0);
+INSERT INTO quotas(PolicyID,Name,Track,Period,Verdict,Data,Disabled) VALUES (6,'Limit Sender Quota','Sender:user@domain',300,'DEFER','User has been deferred for five minutes',0);
+INSERT INTO quotas_limits(QuotasID,Type,CounterLimit,Disabled) VALUES (3,'MessageCount',10,0);
+COMMIT;
+```
+
+## Laboratório: Limitar o recebimento de email externo para a conta foo@bar
+
+
+1. Crie uma coleção para os usuários locais
+
+```sql
+INSERT INTO policy_groups(Name,Disabled) VALUES ('limitToUserRecipient',0);
+```
+
+2. Crie uma coleção para os domínios locais
+
+```sql
+INSERT INTO policy_groups(Name,Disabled) VALUES ('limitToLocalDomainRecipient',0);
+```
+
+3. Configure o usuário _foo@bar_ como membro do grupo *_limitToUserRecipient_*
+
+```sql
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (7,'foo@bar',0);
+```
+
+4. Configure o domínio _@bar_ como membro do grupo *_limitToLocalDomainRecipient_*
+
+```sql
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (7,'@bar',0);
+```
+
+5. Crie a política _"Limit Recipient"_
+
+```sql
+INSERT INTO policies(Name,Priority,Disabled) VALUES ('Limit Recipient',0,0);
+```
+
+6. Configure os grupos *_limitToUserRecipient_* e *_limitToLocalDomainRecipient_* como membro da política *_Limit Recipient_*
+
+```sql
+INSERT INTO policy_members(PolicyID,Source,Destination,Disabled) VALUES (7,'%limitToRecipient','!%limitToLocalDomainRecipient',0);
+```
+
+> Nota: O simbolo exclamativo possui o mesmo valor lógico da negação, pois, estamos negando a política para a coleção %limitToLocalDomainRecipient.
+
+7. Crie a cota para a política *_Limit Recipient_*
+
+A configuração abaixo adiará por 5 minutos o recebimento da mensagem que excedeu o limite da cota.
+
+```sql
+INSERT INTO quotas(PolicyID,Name,Track,Period,Verdict,Data,Disabled) VALUES (7,'Limit Recipient Quota','Recipient:user@domain',300,'DEFER','User has been deferred for five minutes',0);
+```
+
+8. Configure o tipo de restrição para a cota *_Limit Recipient_*
+
+Limita o envio de 10 mensagens por 5 minutos.
+
+```sql
+INSERT INTO quotas_limits(QuotasID,Type,CounterLimit,Disabled) VALUES (7,'MessageCount',10,0);
+```
+
+9. Script SQL
+
+```sql
+BEGIN TRANSACTION
+INSERT INTO policy_groups(Name,Disabled) VALUES ('limitToUserRecipient',0);
+INSERT INTO policy_groups(Name,Disabled) VALUES ('limitToLocalDomainRecipient',0);
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (4,'f13@labz.localhost.local',0);
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (5,'@labz.localhost.local',0);
+INSERT INTO policies(Name,Priority,Disabled) VALUES ('Limit Recipient',0,0);
+INSERT INTO policy_members(PolicyID,Source,Destination,Disabled) VALUES (7,'%limitToRecipient','!%limitToLocalDomainRecipient',0);
+INSERT INTO quotas(PolicyID,Name,Track,Period,Verdict,Data,Disabled) VALUES (7,'Limit Recipient Quota','Recipient:user@domain',300,'DEFER','User has been deferred for five minutes',0);
+INSERT INTO quotas_limits(QuotasID,Type,CounterLimit,Disabled) VALUES (4,'MessageCount',10,0);
+COMMIT;
+```
+
+## Laboratório: Rejeitar o envio de email da conta *_foo@bar_* para qualquer domínio externo
+
+1. Crie a política _"Somente envio local"_
+
+```sql
+INSERT INTO policies(Name,Priority,Disabled) VALUES ('Somente envio local',0,0);
+```
+
+2. Configure os grupos *_senderLocalOnlyUser_* e *_limitToLocalDomainRecipient_* como membros da política _"Somente envio local"_
+
+```sql
+INSERT INTO "policy_members" (PolicyID,Source,Destination) VALUES(8, '%senderLocalOnlyUser', '!%limitToLocalDomainRecipient');
+```
+
+3. Crie uma coleção de usuários para receber a diretiva
+
+```sql
+INSERT INTO policy_groups(Name,Disabled) VALUES ('senderLocalOnlyUser',0);
+```
+
+4. Configure o usuário como membro do grupo *_senderLocalOnlyUser_*
+
+```sql
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (6,'f13@labz.localhost.local',0);
+```
+
+5. Configure a diretiva para permitir somente o envio local para o grupo *_senderLocalOnlyUser_*
+
+```sql
+INSERT INTO "access_control" (ID, PolicyID, Name, Verdict, Data, Comment, Disabled)  VALUES (1,8,'sender local only', 'REJECT', 'Access Denied', 'Somente envio local', 0);
+```
+
+6. Script
+
+```sql
+BEGIN TRANSACTION;
+INSERT INTO policies(Name,Priority,Disabled) VALUES ('Somente envio local',0,0);
+INSERT INTO "policy_members" (PolicyID,Source,Destination) VALUES(8, '%senderLocalOnlyUser', '!%limitToLocalDomainRecipient');
+INSERT INTO policy_groups(Name,Disabled) VALUES ('senderLocalOnlyUser',0);
+INSERT INTO policy_group_members(PolicyGroupID,Member,Disabled) VALUES (6,'f13@labz.localhost.local',0);
+INSERT INTO "access_control" (ID, PolicyID, Name, Verdict, Data, Comment, Disabled)  VALUES (1,8,'sender local only', 'REJECT', 'Access Denied', 'Somente envio local', 0);
+COMMIT;
+```
+
+## Laboratório: Restrição para recebimento de email para um domínio local
+
+
+1. Configure o domínio local como membro da política "Somente envio local"
+
+```sql
+INSERT INTO "policy_members" (PolicyID,Source,Destination) VALUES(9, '!@labz.localhost.local', '@labz.localhost.local');
+```
+
+2. Script
+
+```sql
+BEGIN TRANSACTION;
+INSERT INTO "policy_members" (PolicyID,Source,Destination) VALUES(8, '!@labz.localhost.local', '@labz.localhost.local');
+COMMIT;
+```
+
+
+## Descrição das colunas de cada Módulo
+
+Coluna _Verdict_
+
++ HOLD: Quarentena
++ REJECT: Rejeita a mensagem
++ DISCARD: 
++ FILTER:
++ REDIRECT: Redireciona a mensagem para outro endereço de e-mail
++ OK: 
+
+Coluna: _Data_
+
+Mensagem de retorno para o emissor
