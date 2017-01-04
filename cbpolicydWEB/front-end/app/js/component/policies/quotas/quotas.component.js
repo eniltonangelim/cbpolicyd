@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var quotas_service_1 = require("./quotas.service");
-var policies_service_1 = require("../policies.service");
+var policies_service_1 = require("../policy/policies.service");
 var quotas_1 = require("../../../model/quotas");
 var angular2_modal_1 = require("angular2-modal");
 var bootstrap_1 = require("angular2-modal/plugins/bootstrap");

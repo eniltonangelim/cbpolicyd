@@ -2,7 +2,7 @@ import { Component, OnInit, ViewContainerRef, ViewEncapsulation}  from '@angular
 import { ActivatedRoute, Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
-import { PoliciesService }   from '../policies.service';
+import { PoliciesService }   from './policies.service';
 import { Policies }          from '../../../model/policies';
 import { PolicyMembersComponent, CustomModalContext }   from '../policy_members/policy.members.component';
 import { Overlay, overlayConfigFactory, OverlayConfig } from 'angular2-modal';
@@ -51,11 +51,11 @@ export class PoliciesComponent implements OnInit {
     }
 
     addPolicy(): void {
-        if (!this.newPolicy.name) { return null}
+        if (!this.newPolicy.name) { return null }
         this.policiesService.create(this.newPolicy).then(
             policy => {
                 this.policies.push(policy);
-                this.newPolicy = new Policies;
+                this.montaPolicy();
             }
         )
     }
@@ -68,13 +68,23 @@ export class PoliciesComponent implements OnInit {
         )        
     }
 
+
+    montaPolicy(): void {
+        this.newPolicy = new Policies
+        this.newPolicy.name = null
+        this.newPolicy.priority = null
+        this.newPolicy.description = null
+        this.newPolicy.disabled = 0
+    }
+
+
     clearPolicy(): void {
-        this.newPolicy = new Policies;
+        this.montaPolicy()
     }
 
     ngOnInit(): void {
         this.getPolicies();
-        this.newPolicy = new Policies;
+        this.montaPolicy();
     }    
 
 }

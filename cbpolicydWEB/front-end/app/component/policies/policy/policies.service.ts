@@ -1,7 +1,7 @@
 import {Injectable}         from '@angular/core';
 import {Response, Http, Headers}    from '@angular/http';
-import '../../rxjs/rxjs-extensions';
-import {Policies}         from '../../model/policies';
+import '../../../rxjs/rxjs-extensions';
+import {Policies}         from '../../../model/policies';
 
 @Injectable()
 export class PoliciesService {

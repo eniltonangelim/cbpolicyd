@@ -4,7 +4,7 @@ import { Observable }               from 'rxjs/Observable';
 import { Subject }                  from 'rxjs/Subject';
 import { AccessControlService }     from './access.control.service';
 import { AccessControl }            from '../../../model/access.control';
-import { PoliciesService }   from '../policies.service';
+import { PoliciesService }   from '../policy/policies.service';
 import { Policies }          from '../../../model/policies';
 
 @Component({

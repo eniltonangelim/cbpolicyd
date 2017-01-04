@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var policies_service_1 = require("../policies.service");
+var policies_service_1 = require("./policies.service");
 var policies_1 = require("../../../model/policies");
 var policy_members_component_1 = require("../policy_members/policy.members.component");
 var angular2_modal_1 = require("angular2-modal");
@@ -40,7 +40,7 @@ var PoliciesComponent = (function () {
         }
         this.policiesService.create(this.newPolicy).then(function (policy) {
             _this.policies.push(policy);
-            _this.newPolicy = new policies_1.Policies;
+            _this.montaPolicy();
         });
     };
     PoliciesComponent.prototype.removePolicy = function (policy) {
@@ -49,12 +49,19 @@ var PoliciesComponent = (function () {
             _this.policies.splice(_this.policies.indexOf(policy), 1);
         });
     };
-    PoliciesComponent.prototype.clearPolicy = function () {
+    PoliciesComponent.prototype.montaPolicy = function () {
         this.newPolicy = new policies_1.Policies;
+        this.newPolicy.name = null;
+        this.newPolicy.priority = null;
+        this.newPolicy.description = null;
+        this.newPolicy.disabled = 0;
+    };
+    PoliciesComponent.prototype.clearPolicy = function () {
+        this.montaPolicy();
     };
     PoliciesComponent.prototype.ngOnInit = function () {
         this.getPolicies();
-        this.newPolicy = new policies_1.Policies;
+        this.montaPolicy();
     };
     return PoliciesComponent;
 }());

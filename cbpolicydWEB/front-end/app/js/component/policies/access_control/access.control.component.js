@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var access_control_service_1 = require("./access.control.service");
 var access_control_1 = require("../../../model/access.control");
-var policies_service_1 = require("../policies.service");
+var policies_service_1 = require("../policy/policies.service");
 var AccessControlComponent = (function () {
     function AccessControlComponent(policiesService, accessControlService) {
         this.policiesService = policiesService;

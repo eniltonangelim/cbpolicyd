@@ -6,7 +6,7 @@ import { CommonModule }   from '@angular/common';
 import { MaterialModule }               from '@angular/material';
 
 import { PolicyMembersComponent }  from '../policy_members/policy.members.component';
-import { PoliciesService }            from '../policies.service';
+import { PoliciesService }            from './policies.service';
 
 @NgModule({
   imports: [

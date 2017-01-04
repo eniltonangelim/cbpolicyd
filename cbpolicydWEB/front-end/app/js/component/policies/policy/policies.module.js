@@ -12,7 +12,7 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var material_1 = require("@angular/material");
 var policy_members_component_1 = require("../policy_members/policy.members.component");
-var policies_service_1 = require("../policies.service");
+var policies_service_1 = require("./policies.service");
 var PoliciesModule = (function () {
     function PoliciesModule() {
     }

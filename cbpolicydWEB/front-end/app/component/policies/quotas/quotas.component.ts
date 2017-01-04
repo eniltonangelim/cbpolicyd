@@ -3,7 +3,7 @@ import { ActivatedRoute, Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 import { QuotasService }     from './quotas.service';
-import { PoliciesService }   from '../policies.service';
+import { PoliciesService }   from '../policy/policies.service';
 import { Quotas }            from '../../../model/quotas';
 import { QuotasLimits }            from '../../../model/quotas.limits';
 import { Policies }          from '../../../model/policies';
